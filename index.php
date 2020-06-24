@@ -1,31 +1,46 @@
 <?php
 
+//moves the pointer to the beginning to the line 
 function lineStart($file) {
     $position = ftell($file);
-    while (fgetc($file) != "\n") {
-        fseek($file, --$position);
-        if ($position == 0) break;
+    //if at beginning of file don't try to go farther
+    if ($position == false) {
+        return $position;
+    } else {
+        while (fgetc($file) != "\n") {
+            fseek($file, --$position);
+            if ($position == 0) break;
+        }
     }
+
     return $position;
 }
 
+//open file
 $file = fopen('Codes.csv', "r+");
 
-    
-$row = fgetcsv($file);
-
-
-
+//go to the end of file to get the last row
 fseek($file, -1, SEEK_END);
 
 lineStart($file);
+
+//get the row
 $row = fgetcsv($file);
-$code = $row[0];
-$link = $row[2];
-ftruncate($file, lineStart($file));
+if (!empty($row)) {
+    $code = $row[0];
+    $link = $row[2];
+} else {
+    $code = "Out of codes please contact admin";
+    $link = ""; 
+}
+
+if (!empty($file)) {
+    ftruncate($file, lineStart($file));
+}
 
 fclose($file);
-    ?>
+
+?>
 
 <!DOCTYPE html>
 <html>
@@ -37,14 +52,12 @@ fclose($file);
       </head>
 
 <body>
-    <h1>MPI lite</h1>
+<h1>MPI lite</h1>
 <p>Copy this unique one time use code to redeem the MPIlite app on the AppStore:</p>
 
 <h3><?php echo $code ?></h3>
 
-<p> Or click this link on your iPhone:<br></br> 
-<a href=<?php echo $link ?> target="_blank"><?php echo $link ?></a></p>
-
+<p>Or <a href=<?php echo $link ?> target="_blank"> click this link</a> on your iPhone</p>
 
 
 <p><a href="mailto:changeMe@meijer.com?subject=MPI lite download link&body=Click this link on your iPhone: <?php echo $link ?>">Send email to yourself with this information</a></p>
