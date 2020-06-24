@@ -3,6 +3,8 @@ body {
     font-size: 100%;
     padding-top: 20px;
     text-align: center;
+    max-lines: [none ];
+    word-wrap: break-word;
 } 
 p {
     padding-top: 10px;
